@@ -28,7 +28,7 @@ public class MoneyCounter : MonoBehaviour
     public bool stateFridge = false;
     public bool stateTV = false;
     public bool stateLamp = false;
-
+    #region
     public bool stateSink_Toilet = false;
     public bool stateGamingSystem = false;
     public bool stateKettle = false;
@@ -56,7 +56,7 @@ public class MoneyCounter : MonoBehaviour
     public bool stateLight_Bathroom = false;
     public bool stateLight_MasterBedroom = false;
     public bool stateLight_Kidsroom = false;
-
+    #endregion
     //Consumer Num ON
     [Header("Appliance State calnum")]
     public int numWashingMash = 0;
@@ -66,7 +66,7 @@ public class MoneyCounter : MonoBehaviour
     public int numFridge = 0;
     public int numTV = 0;
     public int numLamp = 0;
-
+    #region
     public int numSink_Toilet = 0;
     public int numGamingSystem = 0;
     public int numKettle = 0;
@@ -94,7 +94,7 @@ public class MoneyCounter : MonoBehaviour
     public int numLight_Bathroom = 0;
     public int numLight_MasterBedroom = 0;
     public int numLight_Kidsroom = 0;
-
+    #endregion
     //Consumer Time on
     [Header("Appliance Ticks/Second On")]
     public int timeWashingMash = 0;
@@ -104,7 +104,7 @@ public class MoneyCounter : MonoBehaviour
     public int timeFridge = 0;
     public int timeTV = 0;
     public int timeLamp = 0;
-
+    #region
     public int timeSink_Toilet = 0;
     public int timeGamingSystem = 0;
     public int timeKettle = 0;
@@ -132,7 +132,7 @@ public class MoneyCounter : MonoBehaviour
     public int timeLight_Bathroom = 0;
     public int timeLight_MasterBedroom = 0;
     public int timeLight_Kidsroom = 0;
-
+    #endregion
     //Consumer Cost per Unit
     [Header("Appliance Cost per Second")]
     public int costWashingMash = 20;
@@ -142,7 +142,7 @@ public class MoneyCounter : MonoBehaviour
     public int costFridge = 5;
     public int costTV = 2;
     public int costLamp = 2;
-
+    #region
     public int costSink_Toilet = 2;
     public int costGamingSystem = 10;
     public int costKettle = 2;
@@ -170,7 +170,7 @@ public class MoneyCounter : MonoBehaviour
     public int costLight_Bathroom = 10;
     public int costLight_MasterBedroom = 10;
     public int costLight_Kidsroom = 10;
-
+    #endregion
 
     //Initialize text in the UI element
     private void Start()
@@ -259,11 +259,13 @@ public class MoneyCounter : MonoBehaviour
         timeLamp += numLamp;
     }
 
+    //Save and update the money the player has in case of crashes
     public void SetMoney()
     {
         PlayerPrefs.SetInt("PlayerMoney", inventory.currentMoney);
     }
 
+    //Get a number that has to be subtracted from the player each second
     private int MoneyPerSec(double moneyPerSec)
     {
         moneyPerSec = ( costWashingMash * numWashingMash +
@@ -300,7 +302,7 @@ public class MoneyCounter : MonoBehaviour
                         costLight_MasterBedroom * numLight_MasterBedroom +
                         costLight_Kidsroom * numLight_Kidsroom
                         );
-        
+        #region Upgrades and Events
         //Apply House Upgrades
         if (inventory.SolarPanels)
         {
@@ -347,7 +349,7 @@ public class MoneyCounter : MonoBehaviour
         {
             moneyPerSec *= 1;
         }
-
+        #endregion
         return (int)moneyPerSec;
     }
 }

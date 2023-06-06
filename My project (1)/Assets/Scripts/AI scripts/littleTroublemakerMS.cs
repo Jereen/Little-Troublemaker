@@ -28,18 +28,27 @@ public class littleTroublemakerMS : MonoBehaviour
     //Roll the dice at the start to decide first appliance and go to it.
     private void Start()
     {
+        //Function that gets a random number from a given range
+        //This number is the same as the ID of an appliance
         ObjID();
     }
 
-    //Custom Function used to get the loc of the appliance and pass in the cordinates to the AI to go to.
+    //Custom Function used to get the location/position of the appliance and pass in the cordinates to the AI to go to.
     private void GoToAppliance(bool app_state, string lookfor_app)
     {
+        //Check to see if the chosen appliance is turned on
+        //If that is the case try to get a new appliance that is off
         if (app_state == false)
         {
+            //Get cords
             pos = GameObject.Find(lookfor_app).transform.position;
+            //Go to cords
             navMeshAgent.SetDestination(pos);
+
+            //Oriantate the AI to face the object, helpful when the AI has to do tight corner turns
             if (DistanceCheck() == true) transform.LookAt(pos);
 
+            //Interact with object when in range
             if (_numFound > 0)
             {
                 _interactable = _colliders[0].GetComponent<IInteractable>();
@@ -50,10 +59,16 @@ public class littleTroublemakerMS : MonoBehaviour
                 if (_interactable != null) _interactable = null;
             }
         }
+        //Run last check to see if there is 1 last appliance that is not on
         else
         {
             ObjID();
             navMeshAgent.SetDestination(pos);
+            //If all appliances are on go to a predesignated spot
+            //This is here to fix an issue where the in case of every appliance being on
+            //The AI would camp and constantly interact (turning on) the last appliance it went to
+            //Good thing here is that the code is wrapped in such a way that when
+            //an appliance DOES get turned off the AI would start moving torwards it again
             if (app_state == true)
             {
                 pos = GameObject.Find("RestingPlace").transform.position;
@@ -66,6 +81,7 @@ public class littleTroublemakerMS : MonoBehaviour
     void Update()
     {
         //Debug.Log(roundCount);
+        //Number of interactables in the collision hitbox sphere
         _numFound = Physics.OverlapSphereNonAlloc(_interactionPoint.position, _interactionPointRadius, _colliders, _interactableMask);
 
         //To which object can the AI go based on a dice roll.
